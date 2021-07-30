@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 import sys
 from os import path, environ
 from time import sleep
@@ -17,12 +18,14 @@ try:
     # Loading values from .env
     load_dotenv()
     refreshTimer = int(environ.get('REFRESH_TIMER', '3'))
+    firefoxPath = environ.get('FIREFOX_PATH', '')
     email = environ.get('EMAIL', '')
     password = environ.get('PASSWORD', '')
 
     # Initial setup
     currentSong = ''
-    driver = webdriver.Firefox(executable_path=resource_path('.\driver\geckodriver2.exe'))
+    binary = FirefoxBinary(firefoxPath)
+    driver = webdriver.Firefox(firefox_binary=binary, executable_path=resource_path('.\driver\geckodriver.exe'))
 
     # Open login page
     driver.get("https://www.epidemicsound.com/login/")
