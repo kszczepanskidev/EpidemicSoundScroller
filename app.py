@@ -21,6 +21,9 @@ try:
     firefoxPath = environ.get('FIREFOX_PATH', '')
     email = environ.get('EMAIL', '')
     password = environ.get('PASSWORD', '')
+    login_selector = environ.get('SELECTOR_LOGIN', '.src-mainapp-auth-___LoginForm__loginButton___3sHJN')
+    title_selector = environ.get('SELECTOR_TITLE', '.src-mainapp-player-components-___TrackInfo__title___1NuSH')
+    artist_selector = environ.get('SELECTOR_ARTIST', '.src-mainapp-components-___CreativesLabel__container___3Wf4k > a:nth-child(1)')
 
     # Initial setup
     currentSong = ''
@@ -32,13 +35,13 @@ try:
     if email != '' and password != '':
         driver.find_element_by_css_selector("#email-address1").send_keys(email)
         driver.find_element_by_css_selector("#password2").send_keys(password)
-        driver.find_element_by_css_selector(".src-mainapp-auth-___LoginForm__loginButton___3sHJN").click()
+        driver.find_element_by_css_selector(login_selector).click()
 
     # Main loop for fetching song name
     while True:
         try:
-            songName = driver.find_element_by_css_selector('.src-mainapp-player-components-___TrackInfo__title___1NuSH')
-            artistName = driver.find_element_by_css_selector('.src-mainapp-components-___CreativesLabel__container___3Wf4k > a:nth-child(1)')
+            songName = driver.find_element_by_css_selector(title_selector)
+            artistName = driver.find_element_by_css_selector(artist_selector)
             if songName.text != None and artistName.text != None:
                 musicData = f'{artistName.text} - {songName.text}'
                 if currentSong != musicData:
