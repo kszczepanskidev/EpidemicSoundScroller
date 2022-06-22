@@ -21,9 +21,9 @@ try:
     firefoxPath = environ.get('FIREFOX_PATH', '')
     email = environ.get('EMAIL', '')
     password = environ.get('PASSWORD', '')
-    login_selector = environ.get('SELECTOR_LOGIN', '.src-mainapp-auth-___LoginForm__loginButton___3sHJN')
-    title_selector = environ.get('SELECTOR_TITLE', '.src-mainapp-player-components-___TrackInfo__title___1NuSH')
-    artist_selector = environ.get('SELECTOR_ARTIST', '.src-mainapp-components-___CreativesLabel__container___3Wf4k > a:nth-child(1)')
+    login_selector = environ.get('SELECTOR_LOGIN', '')
+    title_selector = environ.get('SELECTOR_TITLE', '')
+    artist_selector = environ.get('SELECTOR_ARTIST', '')
 
     # Initial setup
     currentSong = ''
@@ -35,7 +35,10 @@ try:
     if email != '' and password != '':
         driver.find_element_by_css_selector("#email-address1").send_keys(email)
         driver.find_element_by_css_selector("#password2").send_keys(password)
-        driver.find_element_by_css_selector(login_selector).click()
+        try:
+            driver.find_element_by_css_selector(str(login_selector)).click()
+        except:
+            pass
 
     # Main loop for fetching song name
     while True:
@@ -53,5 +56,7 @@ try:
             pass
         sleep(refreshTimer)
 except:
-    print("Unexpected error:", sys.exc_info()[0])
-    sleep(15)
+    log = sys.exc_info()[0]
+    print("Unexpected error:", log)
+    with open('log.txt', 'w') as f:
+        f.write(str(log))
