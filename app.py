@@ -21,10 +21,8 @@ try:
     firefoxPath = environ.get('FIREFOX_PATH', '')
     email = environ.get('EMAIL', '')
     password = environ.get('PASSWORD', '')
-    login_selector = environ.get('SELECTOR_LOGIN', '')
-    title_selector = environ.get('SELECTOR_TITLE', '')
-    artist_selector = environ.get('SELECTOR_ARTIST', '')
-
+    title_selector = 'title'
+    artist_selector = 'creatives'
     # Initial setup
     currentSong = ''
     binary = FirefoxBinary(firefoxPath)
@@ -33,18 +31,18 @@ try:
     # Open login page
     driver.get("https://www.epidemicsound.com/login/")
     if email != '' and password != '':
-        driver.find_element_by_css_selector("#email-address1").send_keys(email)
-        driver.find_element_by_css_selector("#password2").send_keys(password)
+        driver.find_element_by_css_selector("input#username").send_keys(email)
+        driver.find_element_by_css_selector("input#password").send_keys(password)
         try:
-            driver.find_element_by_css_selector(str(login_selector)).click()
+            driver.find_element_by_css_selector('input#kc-login').click()
         except:
             pass
 
     # Main loop for fetching song name
     while True:
         try:
-            songName = driver.find_element_by_css_selector(title_selector)
-            artistName = driver.find_element_by_css_selector(artist_selector)
+            songName = driver.find_element_by_css_selector(f'a[class^="src-mainapp-player-components-___TrackInfo__{title_selector}"]')
+            artistName = driver.find_element_by_css_selector(f'div[class^="src-mainapp-player-components-___TrackInfo__{artist_selector}"]')
             if songName.text != None and artistName.text != None:
                 musicData = f'{artistName.text} - {songName.text}'
                 if currentSong != musicData:
